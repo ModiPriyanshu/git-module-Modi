@@ -13,7 +13,7 @@ def read_and_visualize():
     plt.ylabel('Close')
     plt.title('Apple Close Pricing over the Time')
     plt.savefig('apple_stock.png')
-    plt.show() 
+    plt.close() 
     
     print(df.head())
  # You'll use pandas to read the CSV data from the URL.
@@ -22,4 +22,21 @@ def read_and_visualize():
  # Plot the results and save the plot as 'apple_stock.png'.
     return df # or whatever variable you use to store the dataframe
 
-read_and_visualize()
+#read_and_visualize()
+
+def calculate_moving_average(df, window_size=30):
+    df['Simple Moving_Average'] = df['AAPL_y'].rolling(window=window_size).mean()
+
+    plt.figure(figsize=(8, 5))
+    plt.plot(pd.to_datetime(df['AAPL_x']), df['AAPL_y'])
+    plt.plot(pd.to_datetime(df['AAPL_x']), df['Simple Moving_Average'], label='30-Day SMA', color='orange')
+    plt.xlabel('Date')
+    plt.ylabel('Close')
+    plt.title('Apple Close Pricing with 30-Day Simple Moving Average')
+    plt.savefig('apple_stock_Simple_Moving_Average.png')
+    plt.show() 
+
+    return df
+
+df = read_and_visualize()
+calculate_moving_average(df, window_size=30)
