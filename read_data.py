@@ -22,6 +22,7 @@ def read_and_visualize():
  # Plot the results and save the plot as 'apple_stock.png'.
     return df # or whatever variable you use to store the dataframe
 
+df = read_and_visualize()
 
 def calculate_moving_average(df, window_size=30):
     df['Simple Moving_Average'] = df['AAPL_y'].rolling(window=window_size).mean()
@@ -37,6 +38,8 @@ def calculate_moving_average(df, window_size=30):
 
     return df
 
+calculate_moving_average(df, window_size=30)
+
 def calculate_bollinger_bands(df, window_size=7):
     df['Middle Band'] = df['AAPL_y'].rolling(window=window_size).mean()
     df['Standard Deviation'] = df['AAPL_y'].rolling(window=window_size).std()
@@ -48,16 +51,42 @@ def calculate_bollinger_bands(df, window_size=7):
     plt.plot(pd.to_datetime(df['AAPL_x']), df['Middle Band'], label='Middle Band', color='orange')
     plt.plot(pd.to_datetime(df['AAPL_x']), df['Upper Band'], label='Upper Band', color='green')
     plt.plot(pd.to_datetime(df['AAPL_x']), df['Lower Band'], label='Lower Band', color='red')
-    #plt.fill_between(pd.to_datetime(df['AAPL_x']), df['Lower Band'], df['Upper Band'], color='gray', alpha=0.3)
     plt.xlabel('Date')
     plt.ylabel('Close')
     plt.title('Apple Close Pricing with Implementing Bollinger Bands')
     plt.legend()
     plt.savefig('apple_stock_Bollinger_Bands.png')
-    plt.show() 
+    plt.close() 
 
     return df
 
-df = read_and_visualize()
-calculate_moving_average(df, window_size=30)
 calculate_bollinger_bands(df, window_size=7)
+
+def calculate_Drawdown(df):
+
+    AAPL_Prices = df['AAPL_y'].tolist()
+    Max_Price = max(AAPL_Prices)
+    Min_Price = min(AAPL_Prices)
+    MDD = (Max_Price - Min_Price) / Max_Price
+    print(f"Maximum Drawdown is: {MDD:.2%}")
+
+    peak = AAPL_Prices[0]
+    DDD = []
+
+    for price in AAPL_Prices:
+        if price > peak:
+            peak = price
+        drawdown = (peak - price) / peak
+        DDD.append(drawdown)
+
+    plt.figure(figsize=(8, 5))
+    plt.plot(pd.to_datetime(df['AAPL_x']), DDD, label='Drawdown', color='orange')
+    plt.xlabel('Date')
+    plt.ylabel('Drawdown')
+    plt.title('Apple Close Pricing with Drawdown')
+    plt.savefig('apple_stock_Daily_Drawdown.png')
+    plt.close()
+
+    return df,DDD
+
+calculate_Drawdown(df)
