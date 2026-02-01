@@ -90,3 +90,46 @@ def calculate_Drawdown(df):
     return df,DDD
 
 calculate_Drawdown(df)
+
+def Calculate_RSI(df, window_size=3):
+    
+    diff = df['AAPL_y'].diff().tolist()
+
+    Gains = []
+    Losses = []
+    
+    for difference in diff:
+        if difference == 0:
+            Gains.append(0)
+            Losses.append(0)
+        elif difference > 0:
+            Gains.append(difference)
+            Losses.append(0)        
+        else:
+            Gains.append(0)
+            Losses.append(-difference)
+    
+    df['Gain'] = Gains
+    df['Loss'] = Losses
+
+    df['Average Gain'] = df['Gain'].rolling(window=window_size).mean()
+    df['Average Loss'] = df['Loss'].rolling(window=window_size).mean()
+    
+
+    Relative_Strength_RS = df['Average Gain'] / df['Average Loss']
+
+    df['RSI'] = 100 - (100 / (1 + Relative_Strength_RS))
+
+    plt.figure(figsize=(8, 5))
+    plt.plot(pd.to_datetime(df['AAPL_x']), df['RSI'], label='RSI', color='orange')
+    plt.axhline(70, color='red', linestyle='--')
+    plt.axhline(30, color='green', linestyle='--')
+    plt.xlabel('Date')
+    plt.ylabel('RSI')
+    plt.title('Apple Close Pricing with RSI')
+    plt.savefig('apple_stock_RSI.png')
+    plt.close() 
+
+    return df['RSI']
+
+Calculate_RSI(df, window_size=3)
