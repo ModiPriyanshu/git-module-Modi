@@ -137,3 +137,5 @@ Calculate_RSI(df, window_size=3)
 def fn_1():
     pass
 
+def fn_2():
+    pass
