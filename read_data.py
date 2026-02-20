@@ -1,3 +1,4 @@
+from statistics import mean
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
@@ -139,3 +140,18 @@ def fn_1():
 
 def fn_2():
     pass
+
+def calculate_mean(data):
+    if len(data) == 0:
+        raise ValueError("Input list cannot be empty")
+    
+    for i in data:
+        if type(i) != int and type(i) != float:
+            raise TypeError("All elements must be numeric")
+    
+    total = sum(data)
+    count = len(data)
+    mean = total / count
+    return mean
+
+    pass # this is a placeholder, we will implement it later
