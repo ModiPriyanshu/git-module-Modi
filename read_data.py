@@ -155,3 +155,87 @@ def calculate_mean(data):
     return mean
 
     pass # this is a placeholder, we will implement it later
+
+def calculate_fibonacci(dataQ2):
+
+    if type(dataQ2) != int:
+        raise ValueError("Input value must be an integer")
+
+    if dataQ2 < 0:
+        raise ValueError("Input value cannot be negative")
+    
+    if dataQ2 == 0:
+        return 0
+    
+    if dataQ2 == 1:
+        return 1
+    
+    x, y = 0, 1
+
+    for i in range(2, dataQ2 + 1):
+        z = x + y
+        x = y
+        y = z
+    return y
+    
+    pass
+
+def Balanced_brackets(dataQ3):
+
+    #This is refereced from Youtube video https://www.youtube.com/watch?v=GC4RVjgoTN and also referred GeeksforGeeks to have solid understanding of logic 
+
+    StoreList = []
+    BracketsDict = { '(': ')', '{': '}', '[': ']' }
+
+    if type(dataQ3) != str:
+        raise ValueError("Input value must be a string")
+
+    if len(dataQ3) == 0:
+        raise ValueError("Input string cannot be empty")
+    
+
+    for i in dataQ3:
+        if i in BracketsDict:
+            StoreList.append(i)
+        else:
+            if len(StoreList) == 0: #If there is no opening bracket
+                return False
+            
+            LastBracket = StoreList.pop() #This removes last element as we closed the recent bracket and check if it matches correctly to the current opened brackets
+
+            if BracketsDict[LastBracket] != i:
+                return False
+            
+    return len(StoreList) == 0
+
+    pass
+
+def Merge_overlappedintervals(dataQ4):
+
+    #This is refereced from Youtube video https://www.youtube.com/watch?v=HCbKvBOlMVI and also referred StackOverflow to have solid understanding about this logic
+
+    if type(dataQ4) != list:
+        raise ValueError("Input value must needs to be list that has multiple sublist with intervalss")
+
+    if len(dataQ4) == 0:
+        raise ValueError("Input list cannot be empty")
+    
+    for interval in dataQ4:
+        if type(interval) != list or len(interval) != 2:
+            raise ValueError("All the list for sub-interval must be only 2 elements")
+    
+    MergedList = [dataQ4[0]] #Initially we took the 1st interval as starting point
+
+    for i in range(0, len(dataQ4)):
+
+        NewMerge = MergedList[-1] #This is Latest merged interval to compare with next interval i from given list
+
+        if dataQ4[i][0] <= NewMerge[-1]: #This is basically comparing start of i interval from list with 2nd element of latest merged interval
+            NewMerge[-1] = max(dataQ4[i][-1], NewMerge[-1]) #It'll updare 2nd element of new merged interval with whatever max value between 2nd element of i or new merged interval
+
+        else:
+            MergedList.append(dataQ4[i]) #Basically if no overlap then we add upcoming interval to the merged list as is
+        
+    return MergedList
+
+    pass
